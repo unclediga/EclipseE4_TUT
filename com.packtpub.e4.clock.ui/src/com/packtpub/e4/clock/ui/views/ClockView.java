@@ -31,6 +31,8 @@ import org.eclipse.swt.SWT;
  * <p>
  */
 
+// Тестовый коммент для теста GIT
+
 public class ClockView extends ViewPart {
 
 	/*
