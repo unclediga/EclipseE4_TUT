@@ -1,20 +1,10 @@
 package com.packtpub.e4.clock.ui.views;
 
-import java.util.Date;
-
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.*;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.SWT;
+
+import com.packtpub.e4.clock.ui.ClockWidget;
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view
@@ -54,43 +44,10 @@ public class ClockView extends ViewPart {
 	 * it.
 	 */
 	public void createPartControl(Composite parent) {
-		
-		final Canvas clock = new Canvas(parent, SWT.NONE);
-		///////////////////////////////
-		clock.addPaintListener(new PaintListener() {
-			@Override
-			public void paintControl(PaintEvent e) {
-				int seconds = (new Date()).getSeconds();
-				int arc = (15 - seconds) * 6 % 360;
-				Color blue = e.display.getSystemColor(SWT.COLOR_BLUE);
-				e.gc.drawArc(e.x, e.y, e.width - 1, e.height - 1, 0, 360);
-				e.gc.setBackground(blue);
-				e.gc.fillArc(e.x, e.y, e.width - 1, e.height - 1, arc - 1, 2);
-			}
-		});
-		//////////////////////////////////////////
-		new Thread("TickTock") {
-			public void run() {
-				while (!clock.isDisposed()) {
-					//clock.redraw();
-					clock.getDisplay().asyncExec(new Runnable() {
-						
-						@Override
-						public void run() {
-							if (clock != null && !clock.isDisposed())
-								clock.redraw();
-						}
-					});
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						System.out.println("Ex return");
-						return;
-					}
-				}
-			}
-		}.start();
 
+		final ClockWidget clock1 = new ClockWidget(parent, SWT.NONE);
+		final ClockWidget clock2 = new ClockWidget(parent, SWT.NONE);
+		final ClockWidget clock3 = new ClockWidget(parent, SWT.NONE);
 	}
 
 	/**
