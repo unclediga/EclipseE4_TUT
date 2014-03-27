@@ -63,15 +63,15 @@ public class ClockView extends ViewPart {
 				int seconds = (new Date()).getSeconds();
 				int arc = (15 - seconds) * 6 % 360;
 				Color blue = e.display.getSystemColor(SWT.COLOR_BLUE);
+				e.gc.drawArc(e.x, e.y, e.width - 1, e.height - 1, 0, 360);
 				e.gc.setBackground(blue);
-				e.gc.drawArc(e.x, e.y, e.width - 1, e.height - 1, arc - 1, 2);
+				e.gc.fillArc(e.x, e.y, e.width - 1, e.height - 1, arc - 1, 2);
 			}
 		});
 		//////////////////////////////////////////
 		new Thread("TickTock") {
 			public void run() {
 				while (!clock.isDisposed()) {
-					System.out.println("Try");
 					//clock.redraw();
 					clock.getDisplay().asyncExec(new Runnable() {
 						
