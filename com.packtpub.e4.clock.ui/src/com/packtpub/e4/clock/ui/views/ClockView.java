@@ -1,5 +1,9 @@
 package com.packtpub.e4.clock.ui.views;
 
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.*;
 import org.eclipse.swt.SWT;
@@ -45,9 +49,50 @@ public class ClockView extends ViewPart {
 	 */
 	public void createPartControl(Composite parent) {
 
-		final ClockWidget clock1 = new ClockWidget(parent, SWT.NONE);
-		final ClockWidget clock2 = new ClockWidget(parent, SWT.NONE);
-		final ClockWidget clock3 = new ClockWidget(parent, SWT.NONE);
+		// получим число выделенных объектов
+		// В обычном режиме с=0, а вот запустившись в debug, включив трассировку
+		// на закладке Trace с флажками debug и trace/graphics
+		// для плагина org.eclipse.ui, получим увеличивающиеся цифру,
+		// увеличивающуюся на 3 после закрытия-открытия нашего View,
+		// если не привязать DisposeListener в ClockWidget().
+		/*
+		 * There are 57 Color instances Application Started: 10281 There are 69
+		 * Color instances There are 72 Color instances There are 75 Color
+		 * instances
+		 */
+		/* PacktPub.Eclipse.4.Plug-in.Development.by.Example.Beginner's.Guide.2013.pdf
+		 * 
+		 * When SWT is running in trace mode, it will keep a list of previously
+		 * allocated resources in a global list, which is accessible through the
+		 * DeviceDataobject. When the resource is disposed, it will be removed
+		 * from the allocated list. This allows the monitoring of the state of
+		 * resources at play in the Eclipse workbench and discover leaks,
+		 * typically through repeated actions and noting an increase each time
+		 * in the resource count.
+		 */
+
+		Object[] oo = parent.getDisplay().getDeviceData().objects;
+		int c = 0;
+		for (Object o : oo) {
+			if (o instanceof Color) {
+				c++;
+			}
+		}
+
+		System.err.println("There are " + c + " Color instances");
+
+		RowLayout layout = new RowLayout(SWT.HORIZONTAL);
+		parent.setLayout(layout);
+
+		final ClockWidget clock1 = new ClockWidget(parent, SWT.NONE, new RGB(
+				255, 0, 0));
+		final ClockWidget clock2 = new ClockWidget(parent, SWT.NONE, new RGB(0,
+				255, 0));
+		final ClockWidget clock3 = new ClockWidget(parent, SWT.NONE, new RGB(0,
+				0, 255));
+
+		clock1.setLayoutData(new RowData(100, 100));
+		clock3.setLayoutData(new RowData(200, 200));
 	}
 
 	/**
