@@ -1,9 +1,14 @@
 package com.packtpub.e4.clock.ui.views;
 
+import java.util.TimeZone;
+
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.*;
 import org.eclipse.swt.SWT;
@@ -40,6 +45,9 @@ public class ClockView extends ViewPart {
 	/**
 	 * The constructor.
 	 */
+
+	private Combo timezones;
+
 	public ClockView() {
 	}
 
@@ -60,7 +68,9 @@ public class ClockView extends ViewPart {
 		 * Color instances There are 72 Color instances There are 75 Color
 		 * instances
 		 */
-		/* PacktPub.Eclipse.4.Plug-in.Development.by.Example.Beginner's.Guide.2013.pdf
+		/*
+		 * PacktPub.Eclipse.4.Plug-in.Development.by.Example.Beginner
+		 * 's.Guide.2013.pdf
 		 * 
 		 * When SWT is running in trace mode, it will keep a list of previously
 		 * allocated resources in a global list, which is accessible through the
@@ -93,6 +103,37 @@ public class ClockView extends ViewPart {
 
 		clock1.setLayoutData(new RowData(100, 100));
 		clock3.setLayoutData(new RowData(200, 200));
+
+		String[] ids = TimeZone.getAvailableIDs();
+		timezones = new Combo(parent, SWT.SIMPLE | SWT.DROP_DOWN);
+		timezones.setVisibleItemCount(5);
+		for (int i = 0; i < ids.length; i++)
+			timezones.add(ids[i]);
+
+		timezones.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String z = timezones.getText();
+				TimeZone tz = z == null ? null : TimeZone.getTimeZone(z);
+				TimeZone dt = TimeZone.getDefault();
+				int offset = tz == null ? 0 : (tz.getOffset(System
+						.currentTimeMillis()) - dt.getOffset(System
+						.currentTimeMillis())) / 3600000;
+				clock3.setOffset(offset);
+				clock3.setOffset(offset);
+				clock3.redraw();
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				clock3.setOffset(0);
+				clock3.redraw();
+
+			}
+		});
+
 	}
 
 	/**
@@ -100,5 +141,6 @@ public class ClockView extends ViewPart {
 	 */
 	public void setFocus() {
 		// viewer.getControl().setFocus();
+		timezones.setFocus();
 	}
 }

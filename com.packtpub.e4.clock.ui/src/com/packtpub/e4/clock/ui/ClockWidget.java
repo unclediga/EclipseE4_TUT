@@ -1,6 +1,7 @@
 package com.packtpub.e4.clock.ui;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -11,14 +12,21 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 public class ClockWidget extends Canvas {
 	private final Color color;
-	public ClockWidget(Composite parent, int style,RGB rgb) {
+	private int offset;
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+
+	public ClockWidget(Composite parent, int style, RGB rgb) {
 		super(parent, style);
 		this.color = new Color(parent.getDisplay(), rgb);
-		
+
 		addPaintListener(new PaintListener() {
 
 			@Override
@@ -28,17 +36,16 @@ public class ClockWidget extends Canvas {
 		});
 
 		addDisposeListener(new DisposeListener() {
-			
+
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
-				if(color != null && !color.isDisposed()){
+				if (color != null && !color.isDisposed()) {
 					color.dispose();
 				}
-				
+
 			}
 		});
-		
-		
+
 		new Thread("TickTock") {
 			public void run() {
 				while (!ClockWidget.this.isDisposed()) {
@@ -80,11 +87,20 @@ public class ClockWidget extends Canvas {
 
 	// Реализация для Листенера
 	public void paintControl(PaintEvent e) {
+
 		int seconds = (new Date()).getSeconds();
 		int arc = (15 - seconds) * 6 % 360;
 		e.gc.drawArc(e.x, e.y, e.width - 1, e.height - 1, 0, 360);
 		e.gc.setBackground(this.color);
 		e.gc.fillArc(e.x, e.y, e.width - 1, e.height - 1, arc - 1, 2);
+		
+		e.gc.setBackground(e.display.getSystemColor(SWT.COLOR_BLACK));
+		int hours = new Date().getHours() + offset;
+		arc = (3 - hours) * 30 % 360;
+		e.gc.fillArc(e.x, e.y, e.width - 1, e.height - 1, arc - 5, 10);
+
 	}
+	
+	
 
 }
