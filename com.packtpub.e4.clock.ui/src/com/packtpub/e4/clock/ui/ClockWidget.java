@@ -1,8 +1,6 @@
 package com.packtpub.e4.clock.ui;
 
 import java.util.Date;
-import java.util.TimeZone;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -12,7 +10,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 public class ClockWidget extends Canvas {
@@ -97,7 +94,8 @@ public class ClockWidget extends Canvas {
 		e.gc.setBackground(e.display.getSystemColor(SWT.COLOR_BLACK));
 		int hours = new Date().getHours() + offset;
 		arc = (3 - hours) * 30 % 360;
-		e.gc.fillArc(e.x, e.y, e.width - 1, e.height - 1, arc - 5, 10);
+		e.gc.fillArc(e.x + (e.width-e.width%4)/4, e.y + (e.height-e.height%4)/4, (e.width-e.width%2)/2 , (e.height-e.height%2)/2, arc - 5, 10);
+		
 
 	}
 	

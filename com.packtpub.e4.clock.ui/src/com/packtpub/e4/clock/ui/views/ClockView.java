@@ -105,6 +105,7 @@ public class ClockView extends ViewPart {
 		clock3.setLayoutData(new RowData(200, 200));
 
 		String[] ids = TimeZone.getAvailableIDs();
+		
 		timezones = new Combo(parent, SWT.SIMPLE | SWT.DROP_DOWN);
 		timezones.setVisibleItemCount(5);
 		for (int i = 0; i < ids.length; i++)
@@ -133,7 +134,7 @@ public class ClockView extends ViewPart {
 
 			}
 		});
-
+		
 	}
 
 	/**
