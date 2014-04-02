@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
 
 import com.packtpub.e4.clock.ui.internal.TimeZoneComparator;
+import com.packtpub.e4.clock.ui.internal.TimeZoneDialog;
 import com.packtpub.e4.clock.ui.internal.TimeZoneViewerComparator;
 import com.packtpub.e4.clock.ui.internal.TimeZoneViewerFilter;
 
@@ -78,7 +79,7 @@ public class TimeZoneTreeView extends ViewPart {
 					selectedValue = ((IStructuredSelection)sel).getFirstElement();
 					if(selectedValue instanceof TimeZone){
 						TimeZone tz = (TimeZone) selectedValue;
-						MessageDialog.openInformation(schell, tz.getID(), tz.toString());
+						new TimeZoneDialog(schell, tz).open();
 					}else{
 						MessageDialog.openInformation(schell, "Double click", "Double Click detected");
 						
