@@ -25,6 +25,7 @@ public class TimeZoneLabelProvider extends LabelProvider implements IStyledLabel
 		this.fr = fr;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public String getText(Object element) {
 		if (element instanceof Map) {
 			return "Time Zones";
