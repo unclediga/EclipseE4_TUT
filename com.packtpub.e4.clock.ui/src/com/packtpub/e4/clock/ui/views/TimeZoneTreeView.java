@@ -3,6 +3,7 @@ package com.packtpub.e4.clock.ui.views;
 import java.net.URL;
 import java.util.TimeZone;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -10,19 +11,18 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.jface.resource.ResourceManager;
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.views.properties.IPropertySource;
 
 import com.packtpub.e4.clock.ui.internal.TimeZoneComparator;
 import com.packtpub.e4.clock.ui.internal.TimeZoneDialog;
@@ -88,6 +88,11 @@ public class TimeZoneTreeView extends ViewPart {
 				}
 			}
 		});
+		
+		// Properties
+//		System.out.println("Adapter is " + Platform.getAdapterManager().
+//				getAdapter(TimeZone.getDefault(),IPropertySource.class));
+		getSite().setSelectionProvider(treeViewer);
 		
 		
 		
