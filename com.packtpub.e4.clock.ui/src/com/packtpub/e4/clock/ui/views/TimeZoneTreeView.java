@@ -26,12 +26,14 @@ import org.eclipse.ui.views.properties.IPropertySource;
 
 import com.packtpub.e4.clock.ui.internal.TimeZoneComparator;
 import com.packtpub.e4.clock.ui.internal.TimeZoneDialog;
+import com.packtpub.e4.clock.ui.internal.TimeZoneSelectionListener;
 import com.packtpub.e4.clock.ui.internal.TimeZoneViewerComparator;
 import com.packtpub.e4.clock.ui.internal.TimeZoneViewerFilter;
 
 public class TimeZoneTreeView extends ViewPart {
 
 	private TreeViewer treeViewer;
+	private TimeZoneSelectionListener selectionListener;
 
 	public TimeZoneTreeView() {
 	}
@@ -94,8 +96,18 @@ public class TimeZoneTreeView extends ViewPart {
 //				getAdapter(TimeZone.getDefault(),IPropertySource.class));
 		getSite().setSelectionProvider(treeViewer);
 		
+		selectionListener = new TimeZoneSelectionListener(treeViewer, getSite().getPart());
+		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(selectionListener);
 		
-		
+	}
+
+	@Override
+	public void dispose() {
+		if(selectionListener != null){
+			getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(selectionListener);
+			selectionListener = null;
+		}
+		super.dispose();
 	}
 
 	@Override
