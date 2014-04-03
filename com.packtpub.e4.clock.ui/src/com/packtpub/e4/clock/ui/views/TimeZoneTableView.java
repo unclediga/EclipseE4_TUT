@@ -11,10 +11,12 @@ import org.eclipse.ui.part.ViewPart;
 import com.packtpub.e4.clock.ui.internal.TimeZoneDispayColumn;
 import com.packtpub.e4.clock.ui.internal.TimeZoneIDColumn;
 import com.packtpub.e4.clock.ui.internal.TimeZoneOffsetColumn;
+import com.packtpub.e4.clock.ui.internal.TimeZoneSelectionListener;
 
 public class TimeZoneTableView extends ViewPart {
 
 	TableViewer tableViewer;
+	private TimeZoneSelectionListener selectionListener;
 	public TimeZoneTableView() {
 	}
 
@@ -34,6 +36,22 @@ public class TimeZoneTableView extends ViewPart {
 		new TimeZoneDispayColumn().addColumnTo(tableViewer);
 		tableViewer.setInput(timeZones);
 		getSite().setSelectionProvider(tableViewer);
+		
+		
+		selectionListener = new TimeZoneSelectionListener(tableViewer,
+				getSite().getPart());
+		getSite().getWorkbenchWindow().getSelectionService()
+				.addSelectionListener(selectionListener);
+		
+	}
+
+	@Override
+	public void dispose() {
+		if(selectionListener != null){
+			getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(selectionListener);
+			selectionListener = null;
+		}
+		super.dispose();
 	}
 
 	@Override
