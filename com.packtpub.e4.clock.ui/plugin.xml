@@ -31,6 +31,14 @@
             name="TimeZoneTreeView"
             restorable="true">
       </view>
+      <view
+            category="com.packtpub.e4.clock.ui"
+            class="com.packtpub.e4.clock.ui.views.TimeZoneTableView"
+            icon="icons/sample.gif"
+            id="com.packtpub.e4.clock.ui.views.TimeZoneTableView"
+            name="TimeZoneTableView"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.core.runtime.adapters">
