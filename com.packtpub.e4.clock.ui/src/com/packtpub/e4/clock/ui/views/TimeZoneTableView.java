@@ -8,7 +8,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import com.packtpub.e4.clock.ui.internal.TimeZoneDispayColumn;
 import com.packtpub.e4.clock.ui.internal.TimeZoneIDColumn;
+import com.packtpub.e4.clock.ui.internal.TimeZoneOffsetColumn;
 
 public class TimeZoneTableView extends ViewPart {
 
@@ -27,6 +29,9 @@ public class TimeZoneTableView extends ViewPart {
 		for (int i = 0; i < ids.length; i++) {
 			timeZones[i] = TimeZone.getTimeZone(ids[i]);
 		}
+		new TimeZoneIDColumn().addColumnTo(tableViewer);
+		new TimeZoneOffsetColumn().addColumnTo(tableViewer);
+		new TimeZoneDispayColumn().addColumnTo(tableViewer);
 		tableViewer.setInput(timeZones);
 		getSite().setSelectionProvider(tableViewer);
 	}
