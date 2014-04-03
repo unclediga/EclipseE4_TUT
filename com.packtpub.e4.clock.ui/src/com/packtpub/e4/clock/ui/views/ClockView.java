@@ -31,6 +31,7 @@ import com.packtpub.e4.clock.ui.ClockWidget;
  */
 
 // Тестовый коммент для теста GIT
+//Тестовый коммент для теста GIT 2
 
 public class ClockView extends ViewPart {
 
