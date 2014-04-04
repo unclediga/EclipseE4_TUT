@@ -80,7 +80,7 @@
          point="org.eclipse.ui.bindings">
       <key
             commandId="com.packtpub.e4.clock.ui.command.hello"
-            contextId="org.eclipse.ui.contexts.window"
+            contextId="org.eclipse.jdt.ui.javaEditorScope"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+9">
       </key>
