@@ -65,6 +65,11 @@
       <handler
             class="com.packtpub.e4.clock.ui.handlers.HelloHandler"
             commandId="com.packtpub.e4.clock.ui.command.hello">
+            <enabledWhen>
+            <reference
+                  definitionId="when.hello.is.active">
+            </reference>
+            </enabledWhen>
       </handler>
    </extension>
    <extension
@@ -74,13 +79,9 @@
                <command
                      commandId="com.packtpub.e4.clock.ui.command.hello" label="Hello" style="push">
                      <visibleWhen>
-                     <with variable="activeContexts">
-                           <iterate operator="or">
-                           <equals
-                                 value="org.eclipse.jdt.ui.javaEditorScope">
-                           </equals>
-                           </iterate>
-                     </with>
+                     <reference
+                           definitionId="when.hello.is.active">
+                     </reference>
                      </visibleWhen>
                </command>
          </menuContribution>
@@ -93,6 +94,19 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+9">
       </key>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="when.hello.is.active">
+                     <with variable="activeContexts">
+                           <iterate operator="or">
+                           <equals
+                                 value="org.eclipse.jdt.ui.javaEditorScope">
+                           </equals>
+                           </iterate>
+                     </with>
+      </definition>
    </extension>
 
 </plugin>
