@@ -12,6 +12,12 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class ClockPreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
 
+	
+	public ClockPreferencePage() {
+		super(GRID);
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
