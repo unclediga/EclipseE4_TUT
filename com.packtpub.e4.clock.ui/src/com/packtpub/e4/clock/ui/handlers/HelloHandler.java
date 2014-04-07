@@ -1,17 +1,24 @@
 package com.packtpub.e4.clock.ui.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.SubToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.progress.IProgressConstants2;
+import org.eclipse.ui.statushandlers.StatusManager;
+
+import com.packtpub.e4.clock.ui.Activator;
 
 public class HelloHandler extends AbstractHandler {
 
@@ -27,6 +34,7 @@ public class HelloHandler extends AbstractHandler {
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					SubMonitor subMonitor = SubMonitor.convert(monitor, "Preparing", 5000);
+					subMonitor = null; // The bug
 					for (int i = 0; i < 50 && !monitor.isCanceled(); i++) {
 						if (i == 10) {
 							subMonitor.subTask("Doing something");
@@ -42,7 +50,17 @@ public class HelloHandler extends AbstractHandler {
 						subMonitor.worked(100);
 					}
 				} catch (InterruptedException e) {
-
+				} catch (NullPointerException e) {
+					/* VARIANT #1
+					return new Status(IStatus.ERROR,
+							Activator.PLUGIN_ID, "Programming bug?", e);
+					*/
+					/* Variant #2 */
+					StatusManager statusManager = StatusManager.getManager();
+					Status status = new Status(IStatus.ERROR,
+							Activator.PLUGIN_ID, "Programming bug?", e);
+					//statusManager.handle(status, StatusManager.LOG); //visible in log only
+					statusManager.handle(status, StatusManager.LOG|StatusManager.SHOW); //in log and you will see dialog win
 				} finally {
 					monitor.done();
 				}
@@ -67,6 +85,21 @@ public class HelloHandler extends AbstractHandler {
 
 
 		};
+		
+		
+		ICommandService service = (ICommandService) PlatformUI.getWorkbench()
+				.getService(ICommandService.class);
+		Command command = service == null ? null : service
+				.getCommand("com.packtpub.e4.clock.ui.command.hello");
+		if (command != null) {
+			job.setProperty(IProgressConstants2.COMMAND_PROPERTY,
+					ParameterizedCommand.generateCommand(command, null));
+		}
+
+		job.setProperty(IProgressConstants2.ICON_PROPERTY, ImageDescriptor
+				.createFromURL(HelloHandler.class
+						.getResource("/icons/sample.gif")));
+
 		job.schedule();
 		return null;
 	}
