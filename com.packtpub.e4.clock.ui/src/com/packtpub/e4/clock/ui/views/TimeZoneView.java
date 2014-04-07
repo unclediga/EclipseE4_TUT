@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -19,24 +20,15 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
+import com.packtpub.e4.clock.ui.Activator;
 import com.packtpub.e4.clock.ui.ClockWidget;
 import com.packtpub.e4.clock.ui.internal.TimeZoneComparator;
 
 public class TimeZoneView extends ViewPart {
 
 	private transient String lastTabSelected;
-	
-	@Override
-	public void saveState(IMemento memento) {
-		super.saveState(memento);
-		memento.putString("lastTabSelected", lastTabSelected);
-	}
-
 	
 	public TimeZoneView() {
 		// TODO Auto-generated constructor stub
@@ -80,18 +72,24 @@ public class TimeZoneView extends ViewPart {
 			}
 		}
 		
+		final IDialogSettings settings =
+				Activator.getDefault().getDialogSettings();
+		lastTabSelected = settings.get("lastTabSelected");
+		
 		tabs.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(e.item instanceof CTabItem){
 					lastTabSelected = ((CTabItem)e.item).getText();
+					settings.put("lastTabSelected", lastTabSelected);
 				}
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
+		
 		
 		if(lastTabSelected == null){
 			tabs.setSelection(0);
@@ -103,17 +101,10 @@ public class TimeZoneView extends ViewPart {
 					break;
 				}
 			}
-		}	
+		}
+		
 			
 		
-	}
-
-	@Override
-	public void init(IViewSite site, IMemento memento) throws PartInitException {
-		super.init(site, memento);
-		if(memento != null){
-			lastTabSelected = memento.getString("lastTabSelected");
-		}
 	}
 
 	@Override
