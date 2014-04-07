@@ -10,6 +10,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
@@ -17,6 +19,9 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
 import com.packtpub.e4.clock.ui.ClockWidget;
@@ -24,6 +29,15 @@ import com.packtpub.e4.clock.ui.internal.TimeZoneComparator;
 
 public class TimeZoneView extends ViewPart {
 
+	private transient String lastTabSelected;
+	
+	@Override
+	public void saveState(IMemento memento) {
+		super.saveState(memento);
+		memento.putString("lastTabSelected", lastTabSelected);
+	}
+
+	
 	public TimeZoneView() {
 		// TODO Auto-generated constructor stub
 	}
@@ -65,7 +79,41 @@ public class TimeZoneView extends ViewPart {
 				scrolled.setExpandVertical(true);
 			}
 		}
-		tabs.setSelection(0);
+		
+		tabs.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(e.item instanceof CTabItem){
+					lastTabSelected = ((CTabItem)e.item).getText();
+				}
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {}
+		});
+		
+		if(lastTabSelected == null){
+			tabs.setSelection(0);
+		}else {
+			CTabItem[] items = tabs.getItems();
+			for (CTabItem cTabItem : items) {
+				if(lastTabSelected.equals(cTabItem.getText())){
+					tabs.setSelection(cTabItem);
+					break;
+				}
+			}
+		}	
+			
+		
+	}
+
+	@Override
+	public void init(IViewSite site, IMemento memento) throws PartInitException {
+		super.init(site, memento);
+		if(memento != null){
+			lastTabSelected = memento.getString("lastTabSelected");
+		}
 	}
 
 	@Override
