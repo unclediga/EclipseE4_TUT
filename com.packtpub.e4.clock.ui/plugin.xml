@@ -144,7 +144,17 @@
             class="com.packtpub.e4.clock.ui.ClockPreferencePage"
             id="com.packtpub.e4.clock.ui.preference.page"
             name="Clock">
+         <keywordReference
+               id="com.packtpub.e4.clock.ui.keywords">
+         </keywordReference>
       </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.keywords">
+      <keyword
+            id="com.packtpub.e4.clock.ui.keywords"
+            label="offset timezone">
+      </keyword>
    </extension>
 
 </plugin>
