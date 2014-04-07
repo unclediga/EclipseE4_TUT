@@ -5,7 +5,9 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.SubToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 
@@ -24,6 +26,16 @@ public class HelloHandler extends AbstractHandler {
 				try {
 					monitor.beginTask("Preparing", 5000);
 					for (int i = 0; i < 50 && !monitor.isCanceled(); i++) {
+						if (i == 10) {
+							monitor.subTask("Doing something");
+						} else if (i == 12) {
+							checkDozen(new SubProgressMonitor(monitor, 100));
+							continue;
+						} else if (i == 25) {
+							monitor.subTask("Doing something else");
+						} else if (i == 40) {
+							monitor.subTask("Nearly there");
+						}
 						Thread.sleep(100);
 						monitor.worked(100);
 					}
@@ -51,8 +63,22 @@ public class HelloHandler extends AbstractHandler {
 
 			}
 
+
 		};
 		job.schedule();
 		return null;
+	}
+	
+	private void checkDozen(IProgressMonitor monitor) {
+		try {
+			monitor.beginTask("Check Dozen", 12);
+			for (int i = 0; i < 12; i++) {
+				Thread.sleep(100);
+				monitor.worked(1);
+			}
+		} catch (InterruptedException e) {
+		}finally{
+			monitor.done();
+		}
 	}
 }
