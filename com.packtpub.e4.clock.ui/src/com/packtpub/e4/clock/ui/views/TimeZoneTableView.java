@@ -7,6 +7,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -47,20 +48,16 @@ public class TimeZoneTableView extends ViewPart {
 		getSite().getWorkbenchWindow().getSelectionService()
 				.addSelectionListener(selectionListener);
 		
-		
-		MenuManager manager = new MenuManager("#PopupMenu");
-		Menu menu = manager.createContextMenu(tableViewer.getControl());
-		tableViewer.getControl().setMenu(menu);
-		Action deprecated = new Action(){
-			@Override
-			public void run() {
-				MessageDialog.openInformation(null, "Hello", "Hello, World!!!");
-			}
-		};
-		deprecated.setText("hello text");
-		manager.add(deprecated);
+		hookContextMenu(tableViewer);
 	}
-
+	
+	private void hookContextMenu(Viewer viewer) {
+		MenuManager manager = new MenuManager("#PopupMenu");
+		Menu menu = manager.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(menu);
+		getSite().registerContextMenu(manager, viewer);
+	}
+	
 	@Override
 	public void dispose() {
 		if(selectionListener != null){
