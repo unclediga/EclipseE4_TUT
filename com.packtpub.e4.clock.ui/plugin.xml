@@ -58,6 +58,11 @@
             name="Hello">
          
       </command>
+      <command
+            description="Show The Time"
+            id="com.packtpub.e4.clock.ui.command.showTheTime"
+            name="Show The Time">
+      </command>
           
    </extension>
    <extension
@@ -70,6 +75,10 @@
                   definitionId="when.hello.is.active">
             </reference>
             </enabledWhen>
+      </handler>
+      <handler
+            class="com.packtpub.e4.clock.ui.handlers.ShowTheTime"
+            commandId="com.packtpub.e4.clock.ui.command.showTheTime">
       </handler>
    </extension>
    <extension
@@ -84,6 +93,26 @@
                      </reference>
                      </visibleWhen>
                </command>
+         </menuContribution>
+         <menuContribution
+               allPopups="false"
+               locationURI="popup:org.eclipse.ui.popup.any">
+            <command
+                  commandId="com.packtpub.e4.clock.ui.command.showTheTime"
+                  label="Show The Time"
+                  style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                        <with
+                              variable="selection">
+                              <iterate ifEmpty="false">
+                              <adapt
+                                    type="java.util.TimeZone">
+                              </adapt>
+                              </iterate>
+                        </with>
+                  </visibleWhen> 
+            </command>
          </menuContribution>
    </extension>
    <extension
