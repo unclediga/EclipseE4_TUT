@@ -140,6 +140,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
+            category="org.eclipse.ui.preferencePages.Workbench"
             class="com.packtpub.e4.clock.ui.ClockPreferencePage"
             id="com.packtpub.e4.clock.ui.preference.page"
             name="Clock">
