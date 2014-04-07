@@ -4,7 +4,9 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.SubToolBarManager;
@@ -24,20 +26,20 @@ public class HelloHandler extends AbstractHandler {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					monitor.beginTask("Preparing", 5000);
+					SubMonitor subMonitor = SubMonitor.convert(monitor, "Preparing", 5000);
 					for (int i = 0; i < 50 && !monitor.isCanceled(); i++) {
 						if (i == 10) {
-							monitor.subTask("Doing something");
+							subMonitor.subTask("Doing something");
 						} else if (i == 12) {
-							checkDozen(new SubProgressMonitor(monitor, 100));
+							checkDozen(subMonitor.newChild(100));
 							continue;
 						} else if (i == 25) {
-							monitor.subTask("Doing something else");
+							subMonitor.subTask("Doing something else");
 						} else if (i == 40) {
-							monitor.subTask("Nearly there");
+							subMonitor.subTask("Nearly there");
 						}
 						Thread.sleep(100);
-						monitor.worked(100);
+						subMonitor.worked(100);
 					}
 				} catch (InterruptedException e) {
 
@@ -70,6 +72,9 @@ public class HelloHandler extends AbstractHandler {
 	}
 	
 	private void checkDozen(IProgressMonitor monitor) {
+		if(monitor == null){
+			monitor = new NullProgressMonitor();
+		}
 		try {
 			monitor.beginTask("Check Dozen", 12);
 			for (int i = 0; i < 12; i++) {
