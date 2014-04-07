@@ -21,8 +21,16 @@ public class HelloHandler extends AbstractHandler {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {};
+					monitor.beginTask("Preparing", 5000);
+					for (int i = 0; i < 50; i++) {
+						Thread.sleep(100);
+						monitor.worked(100);
+					}
+				} catch (InterruptedException e) {
+					
+				}finally{
+					monitor.done();
+				}
 				// Exception !!! Invoke UI-function in noUI-thread
 				//MessageDialog.openInformation(null, "Hello", "World");
 				Display.getDefault().asyncExec(new Runnable() {
