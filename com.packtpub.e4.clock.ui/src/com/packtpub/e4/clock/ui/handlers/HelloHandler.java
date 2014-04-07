@@ -12,39 +12,45 @@ import org.eclipse.swt.widgets.Display;
 public class HelloHandler extends AbstractHandler {
 
 	public HelloHandler() {
-		
+
 	}
+
 	@Override
 	public Object execute(ExecutionEvent event)
 			throws org.eclipse.core.commands.ExecutionException {
-		Job job = new Job("About to say Hello"){
+		Job job = new Job("About to say Hello") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					monitor.beginTask("Preparing", 5000);
-					for (int i = 0; i < 50; i++) {
+					for (int i = 0; i < 50 && !monitor.isCanceled(); i++) {
 						Thread.sleep(100);
 						monitor.worked(100);
 					}
 				} catch (InterruptedException e) {
-					
-				}finally{
+
+				} finally {
 					monitor.done();
 				}
-				// Exception !!! Invoke UI-function in noUI-thread
-				//MessageDialog.openInformation(null, "Hello", "World");
-				Display.getDefault().asyncExec(new Runnable() {
-					
-					@Override
-					public void run() {
-						MessageDialog.openInformation(null, "Hello", "World");
-						
-					}
-				});
+
+				if (!monitor.isCanceled()) {
+
+					// Exception !!! Invoke UI-function in noUI-thread
+					// MessageDialog.openInformation(null, "Hello", "World");
+					Display.getDefault().asyncExec(new Runnable() {
+
+						@Override
+						public void run() {
+							MessageDialog.openInformation(null, "Hello",
+									"World");
+
+						}
+					});
+				}
 				return Status.OK_STATUS;
-				
+
 			}
-			
+
 		};
 		job.schedule();
 		return null;
